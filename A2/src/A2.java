@@ -5,7 +5,7 @@ import java.io.File;
 
 public class A2 extends JFrame implements ActionListener {
 
-    private final Font font;
+    private Font font;
     private JPanel radioButtonPanel;
     private Font graphFont = new Font("Sans-serif", Font.PLAIN, 12);
     private DrawNetGraph netGraph;
