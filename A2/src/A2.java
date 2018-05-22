@@ -9,7 +9,6 @@ public class A2 extends JFrame implements ActionListener {
     private JPanel radioButtonPanel;
     private Font graphFont = new Font("Sans-serif", Font.PLAIN, 12);
     private DrawNetGraph netGraph;
-    private JLabel  volumeLabel;
 
 
 
@@ -44,6 +43,8 @@ public class A2 extends JFrame implements ActionListener {
                         int retval = fileChooser.showOpenDialog(A2.this);
                         if (retval == JFileChooser.APPROVE_OPTION) {
                             File f = fileChooser.getSelectedFile();
+                            FileImporter getData = new FileImporter(f);
+
                         }
                     }
                 }
