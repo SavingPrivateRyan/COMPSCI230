@@ -1,23 +1,38 @@
 import java.io.File;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Scanner;
-import java.io.File;
+import java.io.IOException;
 
 
 public class FileImporter {
     private File f;
     private Scanner input;
+    private String filePath;
+    private ArrayList<String[]> dataList;
 
     public FileImporter(File f) {
         this.f = f;
+        filePath = f.getAbsolutePath();
+        dataList = new ArrayList<String[]>();
 
     }
 
     public ArrayList<String[]> readData(){
         try {
-            input = Scanner(Paths.get(f.getAbsolutePath()));
+            input = new Scanner(Paths.get(filePath));
+        }
+        catch (IOException ioExc) {
+
 
         }
+        while (input.hasNext()) {
+            String currentLine = input.nextLine();
+            String[] strArray = currentLine.split("\\t");
+            dataList.add(strArray);
+        }
+
+        return dataList;
     }
 }

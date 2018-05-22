@@ -1,15 +1,23 @@
+import javafx.scene.control.RadioButton;
+
 import java.awt.*;
 import javax.swing.*;
 import java.awt.event.*;
 import java.io.File;
+import java.util.*;
 
-public class A2 extends JFrame implements ActionListener {
+public class A2 extends JFrame implements ActionListener, ItemListener {
 
     private Font font;
     private JPanel radioButtonPanel;
     private Font graphFont = new Font("Sans-serif", Font.PLAIN, 12);
+    private JRadioButton radioButtonSource;
+    private JRadioButton radioButtonDestination;
     private DrawNetGraph netGraph;
-
+    private ArrayList<String[]> dataList;
+    private ArrayList<String> srcHosts;
+    private ArrayList<String> destHosts;
+    private JComboBox<String> hostComboBox;
 
 
     public A2() {
@@ -18,14 +26,23 @@ public class A2 extends JFrame implements ActionListener {
         setSize(1000, 500);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         font = new Font("Sans-serif", Font.PLAIN, 20);
+        setupArrayLists();
         setupMenu();
         setupRadioButtons();
+        setupComboBox();
         netGraph = new DrawNetGraph();
         netGraph.setBackground(Color.WHITE);
         add(netGraph);
         setVisible(true);
 
     }
+
+    public void setupArrayLists() {
+        dataList = new ArrayList<String[]>();
+        srcHosts = new ArrayList<String>();
+        destHosts = new ArrayList<String>();
+    }
+
     public void setupMenu() {
         JMenuBar menuBar = new JMenuBar();
         setJMenuBar(menuBar);
@@ -44,6 +61,9 @@ public class A2 extends JFrame implements ActionListener {
                         if (retval == JFileChooser.APPROVE_OPTION) {
                             File f = fileChooser.getSelectedFile();
                             FileImporter getData = new FileImporter(f);
+                            dataList = getData.readData();
+                            fillHostArrays();
+                            updateComboBox();
 
                         }
                     }
@@ -72,20 +92,98 @@ public class A2 extends JFrame implements ActionListener {
         c.gridy = GridBagConstraints.RELATIVE;
         c.anchor = GridBagConstraints.FIRST_LINE_START;
         ButtonGroup radioButtons = new ButtonGroup();
-        JRadioButton radioButtonSource = new JRadioButton("Source hosts");
+        radioButtonSource = new JRadioButton("Source hosts");
         radioButtonSource.setFont(font);
         radioButtonSource.setSelected(true);
         radioButtons.add(radioButtonSource);
         radioButtonPanel.add(radioButtonSource, c);
-        JRadioButton radioButtonDestination = new JRadioButton("Destination hosts");
+        radioButtonDestination = new JRadioButton("Destination hosts");
         radioButtonDestination.setFont(font);
         radioButtons.add(radioButtonDestination);
         radioButtonPanel.add(radioButtonDestination, c);
+        radioButtonSource.addActionListener(this);
+        radioButtonDestination.addActionListener(this);
         add(radioButtonPanel);
+    }
+
+    public void setupComboBox() {
+        hostComboBox = new JComboBox<String>();
+        hostComboBox.setModel((MutableComboBoxModel) new DefaultComboBoxModel());
+        hostComboBox.setLocation(300, 38);
+        hostComboBox.setSize(300,25);
+        hostComboBox.setMaximumRowCount(8);
+        hostComboBox.addItemListener(this);
+        hostComboBox.setFont(font);
+        hostComboBox.setVisible(false);
+        add(hostComboBox);
+
+    }
+
+    public void fillHostArrays() {
+        Comparator<String> ipComparator = new Comparator<String>() {
+            public int compare(String ip1, String ip2) {
+                return toNumeric(ip1).compareTo(toNumeric(ip2));
+            }
+        };
+
+        Set<String> rawSource = new HashSet<String>();
+        Set<String> rawDestination = new HashSet<String>();
+        SortedSet<String> source = new TreeSet<String>(ipComparator);
+        SortedSet<String> destination = new TreeSet<String>(ipComparator);
+
+        for (String[] traceLine : dataList) {
+            if (traceLine[2].matches("^(\\d{1,3}\\.){3}\\d{1,3}$")) {
+                rawSource.add(traceLine[2]);
+            }
+            if (traceLine[4].matches("^(\\d{1,3}\\.){3}\\d{1,3}$")) {
+                rawDestination.add(traceLine[4]);
+            }
+        }
+        source.addAll(rawSource);
+        destination.addAll(rawDestination);
+        srcHosts.addAll(source);
+        destHosts.addAll(destination);
+    }
+
+    public Long toNumeric(String ip) {
+        Scanner sc = new Scanner(ip).useDelimiter("\\.");
+        Long l = (sc.nextLong() << 24) + (sc.nextLong() << 16) + (sc.nextLong() << 8)
+                + (sc.nextLong());
+
+        sc.close();
+        return l;
+    }
+
+    public void updateComboBox() {
+        hostComboBox.removeAllItems();
+        if (radioButtonSource.isSelected()) {
+            for (String ip : srcHosts){
+                hostComboBox.addItem(ip);
+            }
+
+        }
+        else {
+            for (String ip1 : destHosts) {
+                hostComboBox.addItem(ip1);
+            }
+        }
+        hostComboBox.setVisible(true);
     }
 
 
     public void actionPerformed(ActionEvent event) {
-        System.out.println('6');
+        if (radioButtonSource.isSelected()) {
+            updateComboBox();
+        }
+        if (radioButtonDestination.isSelected()) {
+            updateComboBox();
+        }
+    }
+
+    public void itemStateChanged(ItemEvent e) {
+        if (e.getStateChange() == ItemEvent.SELECTED) {
+            //setImage(hostComboBox.getSelectedIndex());
+        }
+        return;
     }
 }
