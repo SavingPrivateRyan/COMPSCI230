@@ -2,13 +2,13 @@ import javax.swing.*;
 import java.awt.*;
 
 public class DrawNetGraph extends JPanel {
-    Font graphFont = new Font("Sans-serif", Font.PLAIN, 12);
 
     public DrawNetGraph() {
         super();
         this.setLayout(null);
         this.setLocation(0, 100);
         this.setSize(1000, 325);
+        this.setBackground(Color.WHITE);
 
 
     }

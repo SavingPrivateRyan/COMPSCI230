@@ -1,5 +1,3 @@
-import javafx.scene.control.RadioButton;
-
 import java.awt.*;
 import javax.swing.*;
 import java.awt.event.*;
@@ -31,7 +29,6 @@ public class A2 extends JFrame implements ActionListener, ItemListener {
         setupRadioButtons();
         setupComboBox();
         netGraph = new DrawNetGraph();
-        netGraph.setBackground(Color.WHITE);
         add(netGraph);
         setVisible(true);
 
@@ -63,6 +60,7 @@ public class A2 extends JFrame implements ActionListener, ItemListener {
                             FileImporter getData = new FileImporter(f);
                             dataList = getData.readData();
                             fillHostArrays();
+                            hostComboBox.setVisible(true);
                             updateComboBox();
 
                         }
@@ -120,6 +118,8 @@ public class A2 extends JFrame implements ActionListener, ItemListener {
     }
 
     public void fillHostArrays() {
+        srcHosts.clear();
+        destHosts.clear();
         Comparator<String> ipComparator = new Comparator<String>() {
             public int compare(String ip1, String ip2) {
                 return toNumeric(ip1).compareTo(toNumeric(ip2));
@@ -146,12 +146,12 @@ public class A2 extends JFrame implements ActionListener, ItemListener {
     }
 
     public Long toNumeric(String ip) {
-        Scanner sc = new Scanner(ip).useDelimiter("\\.");
-        Long l = (sc.nextLong() << 24) + (sc.nextLong() << 16) + (sc.nextLong() << 8)
-                + (sc.nextLong());
+            Scanner sc = new Scanner(ip).useDelimiter("\\.");
+            Long l = (sc.nextLong() << 24) + (sc.nextLong() << 16) + (sc.nextLong() << 8)
+                    + (sc.nextLong());
 
-        sc.close();
-        return l;
+            sc.close();
+            return l;
     }
 
     public void updateComboBox() {
@@ -167,7 +167,7 @@ public class A2 extends JFrame implements ActionListener, ItemListener {
                 hostComboBox.addItem(ip1);
             }
         }
-        hostComboBox.setVisible(true);
+
     }
 
 
