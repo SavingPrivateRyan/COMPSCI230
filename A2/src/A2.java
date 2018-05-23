@@ -16,6 +16,7 @@ public class A2 extends JFrame implements ActionListener, ItemListener {
     private ArrayList<String> srcHosts;
     private ArrayList<String> destHosts;
     private JComboBox<String> hostComboBox;
+    private Plotting p;
 
 
     public A2() {
@@ -62,6 +63,9 @@ public class A2 extends JFrame implements ActionListener, ItemListener {
                             fillHostArrays();
                             hostComboBox.setVisible(true);
                             updateComboBox();
+                            p = new Plotting(dataList, srcHosts, destHosts, radioButtonSource.isSelected(), hostComboBox.getSelectedIndex());
+                            netGraph.setplot(p);
+                            netGraph.repaint();
 
                         }
                     }
@@ -110,7 +114,7 @@ public class A2 extends JFrame implements ActionListener, ItemListener {
         hostComboBox.setLocation(300, 38);
         hostComboBox.setSize(300,25);
         hostComboBox.setMaximumRowCount(8);
-        hostComboBox.addItemListener(this);
+
         hostComboBox.setFont(font);
         hostComboBox.setVisible(false);
         add(hostComboBox);
@@ -155,6 +159,7 @@ public class A2 extends JFrame implements ActionListener, ItemListener {
     }
 
     public void updateComboBox() {
+        hostComboBox.removeItemListener(this);
         hostComboBox.removeAllItems();
         if (radioButtonSource.isSelected()) {
             for (String ip : srcHosts){
@@ -167,6 +172,7 @@ public class A2 extends JFrame implements ActionListener, ItemListener {
                 hostComboBox.addItem(ip1);
             }
         }
+        hostComboBox.addItemListener(this);
 
     }
 
@@ -174,16 +180,29 @@ public class A2 extends JFrame implements ActionListener, ItemListener {
     public void actionPerformed(ActionEvent event) {
         if (radioButtonSource.isSelected()) {
             updateComboBox();
+            if (!dataList.isEmpty()) {
+                p.setList(true);
+                p.setIndex(0);
+                netGraph.repaint();
+            }
         }
         if (radioButtonDestination.isSelected()) {
             updateComboBox();
+            if (!dataList.isEmpty()) {
+                p.setList(false);
+                p.setIndex(0);
+                netGraph.repaint();
+            }
+
         }
     }
 
     public void itemStateChanged(ItemEvent e) {
-        if (e.getStateChange() == ItemEvent.SELECTED) {
-            //setImage(hostComboBox.getSelectedIndex());
+        if (hostComboBox.getSelectedItem() != null && e.getStateChange() == ItemEvent.SELECTED) {
+            p.setIndex(hostComboBox.getSelectedIndex());
+            netGraph.repaint();
         }
         return;
     }
+
 }
