@@ -114,7 +114,6 @@ public class A2 extends JFrame implements ActionListener, ItemListener {
         hostComboBox.setLocation(300, 38);
         hostComboBox.setSize(300,25);
         hostComboBox.setMaximumRowCount(8);
-
         hostComboBox.setFont(font);
         hostComboBox.setVisible(false);
         add(hostComboBox);
