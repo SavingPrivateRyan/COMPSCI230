@@ -131,6 +131,7 @@ public class Plotting {
         int checkValue = largestTransfer / 100000;
         if (checkValue % 5 != 0){
             numberOfTicksY = checkValue;
+            yLabelValue = 100;
             while (numberOfTicksY > 10) {
                 yLabelValue *= 2;
                 numberOfTicksY /= 2;
@@ -138,6 +139,10 @@ public class Plotting {
             tickDistanceY = 250 / numberOfTicksY;
 
         }
+        if (checkValue % 5 == 0) {
+
+        }
+        /*
         if ((checkValue == 4) || ((checkValue >= 6) && (checkValue < 10))) {
             numberOfTicksY = checkValue;
             tickDistanceY = 250 / numberOfTicksY;
@@ -163,6 +168,7 @@ public class Plotting {
             tickDistanceY = 100000 / (bytesPerPixel);
             yLabelValue = 200;
         }
+        */
 
         System.out.println(largestTransfer + " " + tickDistanceY);
     }
