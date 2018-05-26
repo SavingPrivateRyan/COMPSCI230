@@ -12,6 +12,9 @@ public class FileImporter {
     private String filePath;
     private ArrayList<String[]> dataList;
 
+    /**
+     * @param f
+     */
     public FileImporter(File f) {
         this.f = f;
         filePath = f.getAbsolutePath();
@@ -19,6 +22,9 @@ public class FileImporter {
 
     }
 
+    /**
+     * @return
+     */
     public ArrayList<String[]> readData(){
         try {
             input = new Scanner(Paths.get(filePath));

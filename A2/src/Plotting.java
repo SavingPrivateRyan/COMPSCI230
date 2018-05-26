@@ -1,4 +1,5 @@
 import java.awt.*;
+import java.awt.geom.Rectangle2D;
 import java.util.*;
 
 public class Plotting {
@@ -13,7 +14,7 @@ public class Plotting {
     private int totalTime;
     private int numberOfTicks;
     private int tickDistance;
-    private int barWidth;
+    private double barWidth;
     private int timeListBuilder;
     private int currentByteValue;
     private int ipLocation;
@@ -21,8 +22,17 @@ public class Plotting {
     private int numberOfTicksY;
     private int tickDistanceY;
     private int yLabelValue;
+    private int largestTransfer;
+    private int bytesPerPixel;
 
 
+    /**
+     * @param dataList
+     * @param sourceHosts
+     * @param destinationHosts
+     * @param currentList
+     * @param currentIndex
+     */
     public Plotting(ArrayList<String[]> dataList, ArrayList<String> sourceHosts, ArrayList<String> destinationHosts,
                     boolean currentList, int currentIndex) {
         this.dataList = dataList;
@@ -39,10 +49,17 @@ public class Plotting {
 
     }
 
+    /**
+     *
+     */
     public void setIpList() {
         if (currentList) ipList = sourceHosts;
         else ipList = destinationHosts;
     }
+
+    /**
+     * @param b
+     */
     public void setList(boolean b) {
         if (b) {
             this.currentList = true;
@@ -55,12 +72,18 @@ public class Plotting {
         computeBytes();
     }
 
+    /**
+     * @param index
+     */
     public void setIndex(int index) {
         this.currentIndex = index;
         computeBytes();
         yAxisScale();
     }
 
+    /**
+     *
+     */
     public void getTime() {
         for (String[] traceLine : dataList) {
             if (traceLine[2].matches("^(\\d{1,3}\\.){3}\\d{1,3}$")) {
@@ -73,6 +96,9 @@ public class Plotting {
         }
     }
 
+    /**
+     *
+     */
     public void computeTime() {
         int preTime = Integer.parseInt(lastTime);
         if (preTime % 2 == 0) {
@@ -84,12 +110,17 @@ public class Plotting {
 
     }
 
+    /**
+     *
+     */
     public void findXAxis() {
         numberOfTicks = totalTime / 50;
         tickDistance = 900 / numberOfTicks;
-        barWidth = tickDistance / 25;
     }
 
+    /**
+     *
+     */
     public void computeBytes() {
         if (currentList) {
             ipLocation = 2;
@@ -120,60 +151,51 @@ public class Plotting {
                 }
             }
         }
+        barWidth = 900.0 / dataArray.size();
+
 
     }
 
+    /**
+     *
+     */
     public void yAxisScale() {
-        int largestTransfer = 0;
+        largestTransfer = 0;
         for (int transfer : dataArray) {
             if (transfer > largestTransfer) largestTransfer = transfer;
         }
         int checkValue = largestTransfer / 100000;
-        if (checkValue % 5 != 0){
-            numberOfTicksY = checkValue;
-            yLabelValue = 100;
-            while (numberOfTicksY > 10) {
-                yLabelValue *= 2;
-                numberOfTicksY /= 2;
+        numberOfTicksY = checkValue;
+        yLabelValue = 100;
+        int evenDivideChecker = 100000;
+        int scaleIncrement = 1;
+        bytesPerPixel = largestTransfer / 250;
+        while (numberOfTicksY >= 10 && bytesPerPixel != 0) {
+            yLabelValue *= 2;
+            numberOfTicksY /= 2;
+            scaleIncrement += 1;
+        }
+        while (numberOfTicksY < 4 && bytesPerPixel != 0) {
+            yLabelValue /= 2;
+            numberOfTicksY *= 2;
+        }
+        if (numberOfTicksY % 5 != 0){
+            tickDistanceY = 250 / numberOfTicksY;
+
+        }
+        if (numberOfTicksY % 5 == 0) {
+            if (bytesPerPixel == 0) tickDistanceY = 0;
+            else {
+                tickDistanceY = evenDivideChecker / (bytesPerPixel);
+                tickDistanceY *= scaleIncrement;
             }
-            tickDistanceY = 250 / numberOfTicksY;
-
         }
-        if (checkValue % 5 == 0) {
-
-        }
-        /*
-        if ((checkValue == 4) || ((checkValue >= 6) && (checkValue < 10))) {
-            numberOfTicksY = checkValue;
-            tickDistanceY = 250 / numberOfTicksY;
-            yLabelValue = 100;
-        }
-
-        if (checkValue == 5 || checkValue == 10) {
-            int bytesPerPixel = largestTransfer / 250;
-            numberOfTicksY = checkValue;
-            tickDistanceY = 100000 / (bytesPerPixel);
-            yLabelValue = 100;
-        }
-
-        if (checkValue > 10 && checkValue < 15 || checkValue > 15 && checkValue < 20) {
-            numberOfTicksY = largestTransfer / 200000;
-            tickDistanceY = 250 / numberOfTicksY;
-            yLabelValue = 200;
-        }
-
-        if (checkValue == 15 || checkValue == 20){
-            numberOfTicksY = largestTransfer / 200000;
-            int bytesPerPixel = largestTransfer / 250;
-            tickDistanceY = 100000 / (bytesPerPixel);
-            yLabelValue = 200;
-        }
-        */
-
-        System.out.println(largestTransfer + " " + tickDistanceY);
     }
 
 
+    /**
+     * @param g
+     */
     public void draw(Graphics g) {
         int tickLocation = 50 + tickDistance;
         int tickNum = 50;
@@ -187,10 +209,35 @@ public class Plotting {
         }
         for (int i1 = 0; i1 < numberOfTicksY; i1++) {
             g.drawLine(45, tickLocationY, 50, tickLocationY);
-            g.drawString(Integer.toString(tickNumY) + "k", 10, tickLocationY + 5);
+            String labelString;
+
+            if (tickNumY >= 1000) {
+                double printNum;
+                labelString = "M";
+                printNum = tickNumY / 1000.0;
+                g.drawString(Double.toString(printNum) + labelString, 10, tickLocationY + 5);
+            }
+            else {
+                int printNumInt;
+                printNumInt = tickNumY;
+                labelString = "k";
+                g.drawString(Integer.toString(printNumInt) + labelString, 10, tickLocationY + 5);
+            }
             tickLocationY -= tickDistanceY;
             tickNumY += yLabelValue;
         }
+        Graphics2D g2d = (Graphics2D) g;
+        g2d.setPaint(Color.lightGray);
+        double xValue = 50;
+        double pixelsUp;
+        double pixelValue = largestTransfer / 250.0;
+        for (int box : dataArray) {
+            if (bytesPerPixel != 0) pixelsUp = box / pixelValue;
+            else pixelsUp = 0;
+            g2d.draw(new Rectangle2D.Double(xValue, 270 - pixelsUp, barWidth, pixelsUp));
+            xValue += barWidth;
+        }
+
 
     }
 }

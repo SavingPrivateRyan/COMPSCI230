@@ -3,6 +3,7 @@ import javax.swing.*;
 import java.awt.event.*;
 import java.io.File;
 import java.util.*;
+import javax.swing.filechooser.FileNameExtensionFilter;
 
 public class A2 extends JFrame implements ActionListener, ItemListener {
 
@@ -19,6 +20,9 @@ public class A2 extends JFrame implements ActionListener, ItemListener {
     private Plotting p;
 
 
+    /**
+     *
+     */
     public A2() {
         super("Flow volume viewer");
         setLayout(null);
@@ -35,12 +39,18 @@ public class A2 extends JFrame implements ActionListener, ItemListener {
 
     }
 
+    /**
+     *
+     */
     public void setupArrayLists() {
         dataList = new ArrayList<String[]>();
         srcHosts = new ArrayList<String>();
         destHosts = new ArrayList<String>();
     }
 
+    /**
+     *
+     */
     public void setupMenu() {
         JMenuBar menuBar = new JMenuBar();
         setJMenuBar(menuBar);
@@ -55,6 +65,9 @@ public class A2 extends JFrame implements ActionListener, ItemListener {
                 new ActionListener() {
                     public void actionPerformed(ActionEvent event) {
                         JFileChooser fileChooser = new JFileChooser(".");
+                        FileNameExtensionFilter filter = new FileNameExtensionFilter("TEXT FILES", "txt", "text");
+                        fileChooser.setFileFilter(filter);
+                        fileChooser.setAcceptAllFileFilterUsed(false);
                         int retval = fileChooser.showOpenDialog(A2.this);
                         if (retval == JFileChooser.APPROVE_OPTION) {
                             File f = fileChooser.getSelectedFile();
@@ -85,6 +98,9 @@ public class A2 extends JFrame implements ActionListener, ItemListener {
 
     }
 
+    /**
+     *
+     */
     public void setupRadioButtons() {
         radioButtonPanel = new JPanel();
         radioButtonPanel.setSize(200, 100);
@@ -108,6 +124,9 @@ public class A2 extends JFrame implements ActionListener, ItemListener {
         add(radioButtonPanel);
     }
 
+    /**
+     *
+     */
     public void setupComboBox() {
         hostComboBox = new JComboBox<String>();
         hostComboBox.setModel((MutableComboBoxModel) new DefaultComboBoxModel());
@@ -120,6 +139,9 @@ public class A2 extends JFrame implements ActionListener, ItemListener {
 
     }
 
+    /**
+     *
+     */
     public void fillHostArrays() {
         srcHosts.clear();
         destHosts.clear();
@@ -148,6 +170,10 @@ public class A2 extends JFrame implements ActionListener, ItemListener {
         destHosts.addAll(destination);
     }
 
+    /**
+     * @param ip
+     * @return
+     */
     public Long toNumeric(String ip) {
             Scanner sc = new Scanner(ip).useDelimiter("\\.");
             Long l = (sc.nextLong() << 24) + (sc.nextLong() << 16) + (sc.nextLong() << 8)
@@ -157,6 +183,9 @@ public class A2 extends JFrame implements ActionListener, ItemListener {
             return l;
     }
 
+    /**
+     *
+     */
     public void updateComboBox() {
         hostComboBox.removeItemListener(this);
         hostComboBox.removeAllItems();
@@ -176,6 +205,9 @@ public class A2 extends JFrame implements ActionListener, ItemListener {
     }
 
 
+    /**
+     * @param event
+     */
     public void actionPerformed(ActionEvent event) {
         if (radioButtonSource.isSelected()) {
             updateComboBox();
@@ -196,6 +228,9 @@ public class A2 extends JFrame implements ActionListener, ItemListener {
         }
     }
 
+    /**
+     * @param e
+     */
     public void itemStateChanged(ItemEvent e) {
         if (hostComboBox.getSelectedItem() != null && e.getStateChange() == ItemEvent.SELECTED) {
             p.setIndex(hostComboBox.getSelectedIndex());

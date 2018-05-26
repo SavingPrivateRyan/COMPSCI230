@@ -4,21 +4,32 @@ import java.awt.*;
 public class DrawNetGraph extends JPanel {
     private Plotting p = null;
 
+    /**
+     *
+     */
     public DrawNetGraph() {
         super();
         this.setLayout(null);
         this.setLocation(0, 100);
-        this.setSize(1000, 325);
-        this.setBackground(Color.WHITE);
+        this.setSize(1000, 330);
+        this.setBackground(Color.darkGray);
     }
 
+    /**
+     * @param p
+     */
     public void setplot(Plotting p) {
         this.p = p;
     }
 
+    /**
+     * @param g
+     */
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
-        g.drawString("Volume [bytes]", 0, 10);
+        Graphics2D g2d = (Graphics2D) g;
+        g2d.setPaint(new Color(255, 100, 5));
+        g.drawString("Volume [bytes]", 1, 11);
         g.drawString("Time [s]", 485, 320);
         g.drawLine(50, 20, 50, 275);
         g.drawLine(45, 270, 950, 270);
