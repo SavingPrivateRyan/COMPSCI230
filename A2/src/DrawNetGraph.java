@@ -1,11 +1,15 @@
+/*Written by Ryan Martin-Gawn
+ * rmar818
+ * 584323162
+ */
+
 import javax.swing.*;
 import java.awt.*;
 
 public class DrawNetGraph extends JPanel {
     private Plotting p = null;
 
-    /**
-     *
+    /** Constructor of the DrawNetGraph that extends JPanel.
      */
     public DrawNetGraph() {
         super();
@@ -15,16 +19,17 @@ public class DrawNetGraph extends JPanel {
         this.setBackground(Color.darkGray);
     }
 
-    /**
-     * @param p
+    /** Method that sets the plotting object in DrawNetGraph for the draw(g) method.
+     * @param p Plotting object.
      */
     public void setplot(Plotting p) {
         this.p = p;
     }
 
-    /**
-     * @param g
+    /** Overridden paintComponent method that draws the graph.
+     * @param g Graphics g object.
      */
+    @Override
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
         Graphics2D g2d = (Graphics2D) g;
@@ -35,7 +40,7 @@ public class DrawNetGraph extends JPanel {
         g.drawLine(45, 270, 950, 270);
         g.drawString("0", 30, 275);
         g.drawString("0", 47, 290);
-        if (p == null) {
+        if (p == null) { //if the file hasn't been imported, then draws the default X-Axis.
             int tickLocation = 125;
             int tickNum = 50;
             for (int i = 0; i < 12; i++) {

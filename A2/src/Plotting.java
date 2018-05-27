@@ -1,3 +1,8 @@
+/*Written by Ryan Martin-Gawn
+ * rmar818
+ * 584323162
+ */
+
 import java.awt.*;
 import java.awt.geom.Rectangle2D;
 import java.util.*;
@@ -26,12 +31,12 @@ public class Plotting {
     private int bytesPerPixel;
 
 
-    /**
-     * @param dataList
-     * @param sourceHosts
-     * @param destinationHosts
-     * @param currentList
-     * @param currentIndex
+    /** Constructor of the Plotting class for drawing the graph plot.
+     * @param dataList ArrayList of String Array objects containing the data imported from a trace txt file.
+     * @param sourceHosts ArrayList of Strings containing the Source IP addresses.
+     * @param destinationHosts ArrayList of Strings containing the Destination IP addresses.
+     * @param currentList boolean value of the current list selected in the JRadioButtons from the A2 Class.
+     * @param currentIndex int value of the current index of the JComboBox from the A2 class.
      */
     public Plotting(ArrayList<String[]> dataList, ArrayList<String> sourceHosts, ArrayList<String> destinationHosts,
                     boolean currentList, int currentIndex) {
@@ -49,15 +54,14 @@ public class Plotting {
 
     }
 
-    /**
-     *
+    /** Sets up what list is selected to be computed.
      */
     public void setIpList() {
         if (currentList) ipList = sourceHosts;
         else ipList = destinationHosts;
     }
 
-    /**
+    /** Method that changes the list that is being computed.
      * @param b
      */
     public void setList(boolean b) {
@@ -69,10 +73,10 @@ public class Plotting {
             this.currentList = false;
             ipList = destinationHosts;
         }
-        computeBytes();
+
     }
 
-    /**
+    /** Method that takes the updated index and then re-executes the calculations.
      * @param index
      */
     public void setIndex(int index) {
@@ -81,8 +85,7 @@ public class Plotting {
         yAxisScale();
     }
 
-    /**
-     *
+    /** Method that computes the amount of time in seconds the relevant trace file takes up for the graph.
      */
     public void getTime() {
         for (String[] traceLine : dataList) {
@@ -96,8 +99,7 @@ public class Plotting {
         }
     }
 
-    /**
-     *
+    /** Method that computes the time that will exist on the X-axis of the graph.
      */
     public void computeTime() {
         int preTime = Integer.parseInt(lastTime);
@@ -110,16 +112,14 @@ public class Plotting {
 
     }
 
-    /**
-     *
+    /** Computes the tick distance on the X-Axis.
      */
     public void findXAxis() {
         numberOfTicks = totalTime / 50;
         tickDistance = 900 / numberOfTicks;
     }
 
-    /**
-     *
+    /** Creates an ArrayList the half the length of time with the total bytes sent or received in 2 second chunks.
      */
     public void computeBytes() {
         if (currentList) {
@@ -156,8 +156,7 @@ public class Plotting {
 
     }
 
-    /**
-     *
+    /** Scales the Y-Axis based on the largest transfer window.
      */
     public void yAxisScale() {
         largestTransfer = 0;
@@ -193,8 +192,8 @@ public class Plotting {
     }
 
 
-    /**
-     * @param g
+    /** Draw method that draws the graph of bytes sent of the duration onf the trace file.
+     * @param g Graphics object passed in from the paintComponent.
      */
     public void draw(Graphics g) {
         int tickLocation = 50 + tickDistance;
@@ -234,7 +233,7 @@ public class Plotting {
         for (int box : dataArray) {
             if (bytesPerPixel != 0) pixelsUp = box / pixelValue;
             else pixelsUp = 0;
-            g2d.draw(new Rectangle2D.Double(xValue, 270 - pixelsUp, barWidth, pixelsUp));
+            g2d.draw(new Rectangle2D.Double(xValue, 270 - pixelsUp, barWidth, pixelsUp)); // Uses Rectangle2D.Double objects to draw the bars so that the graph can fit exactly to the graph Axis.
             xValue += barWidth;
         }
 

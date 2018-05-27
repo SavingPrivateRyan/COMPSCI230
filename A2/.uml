@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Diagram>
+  <ID>JAVA</ID>
+  <OriginalElement />
+  <nodes>
+    <node x="-75.0" y="312.0">FileImporter</node>
+    <node x="211.52777777777774" y="-13.0">Plotting</node>
+    <node x="231.1111111111111" y="519.0">A2</node>
+    <node x="224.99999999999997" y="302.0">DrawNetGraph</node>
+  </nodes>
+  <notes />
+  <edges>
+    <edge source="A2" target="FileImporter">
+      <point x="-63.99999999999997" y="-125.0" />
+      <point x="293.1111111111111" y="422.0" />
+      <point x="94.0" y="422.0" />
+      <point x="57.0" y="37.0" />
+    </edge>
+    <edge source="A2" target="DrawNetGraph">
+      <point x="-21.333333333333314" y="-125.0" />
+      <point x="335.77777777777777" y="437.0" />
+      <point x="308.0" y="437.0" />
+      <point x="-60.0" y="48.0" />
+    </edge>
+    <edge source="A2" target="Plotting">
+      <point x="64.0" y="-125.0" />
+      <point x="421.1111111111111" y="427.0" />
+      <point x="498.5" y="427.0" />
+      <point x="498.5" y="271.0" />
+      <point x="516.7777777777777" y="271.0" />
+      <point x="61.25" y="125.5" />
+    </edge>
+    <edge source="DrawNetGraph" target="Plotting">
+      <point x="-60.0" y="-48.0" />
+      <point x="284.0" y="280.0" />
+      <point x="271.7777777777777" y="281.0" />
+      <point x="-183.75" y="125.5" />
+    </edge>
+  </edges>
+  <settings layout="Hierarchic Group" zoom="1.0" x="250.0" y="424.5" />
+  <SelectedNodes />
+  <Categories>
+    <Category>Constructors</Category>
+    <Category>Methods</Category>
+    <Category>Properties</Category>
+    <Category>Fields</Category>
+  </Categories>
+  <SCOPE>All</SCOPE>
+  <VISIBILITY>public</VISIBILITY>
+</Diagram>
+

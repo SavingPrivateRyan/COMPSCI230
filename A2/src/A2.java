@@ -1,3 +1,12 @@
+/*
+ * This program takes a given .txt file in the format of a trace file and then displays the bytes sent or received
+ * as a bar graph.
+ *
+ * Written by Ryan Martin-Gawn
+ * rmar818
+ * 584323162.
+ */
+
 import java.awt.*;
 import javax.swing.*;
 import java.awt.event.*;
@@ -20,8 +29,7 @@ public class A2 extends JFrame implements ActionListener, ItemListener {
     private Plotting p;
 
 
-    /**
-     *
+    /** Constructor of the A2 Frame and everything inside.
      */
     public A2() {
         super("Flow volume viewer");
@@ -39,8 +47,7 @@ public class A2 extends JFrame implements ActionListener, ItemListener {
 
     }
 
-    /**
-     *
+    /** Sets up the ArrayLists that hold the trace file and the IP addresses.
      */
     public void setupArrayLists() {
         dataList = new ArrayList<String[]>();
@@ -48,8 +55,7 @@ public class A2 extends JFrame implements ActionListener, ItemListener {
         destHosts = new ArrayList<String>();
     }
 
-    /**
-     *
+    /** Adds the JMenu to the A2 Frame.
      */
     public void setupMenu() {
         JMenuBar menuBar = new JMenuBar();
@@ -98,8 +104,7 @@ public class A2 extends JFrame implements ActionListener, ItemListener {
 
     }
 
-    /**
-     *
+    /** Adds the JRadioButtons to the A2 Frame.
      */
     public void setupRadioButtons() {
         radioButtonPanel = new JPanel();
@@ -124,8 +129,7 @@ public class A2 extends JFrame implements ActionListener, ItemListener {
         add(radioButtonPanel);
     }
 
-    /**
-     *
+    /** Adds the initially invisible JComboBox to the A2 Frame.
      */
     public void setupComboBox() {
         hostComboBox = new JComboBox<String>();
@@ -139,8 +143,7 @@ public class A2 extends JFrame implements ActionListener, ItemListener {
 
     }
 
-    /**
-     *
+    /** Takes the imported file and adds the IP addresses to the JComboBox.
      */
     public void fillHostArrays() {
         srcHosts.clear();
@@ -149,7 +152,7 @@ public class A2 extends JFrame implements ActionListener, ItemListener {
             public int compare(String ip1, String ip2) {
                 return toNumeric(ip1).compareTo(toNumeric(ip2));
             }
-        };
+        }; //Anonymous Inner Class that sets up the comparator for the Treeset to sort the IP addresses.
 
         Set<String> rawSource = new HashSet<String>();
         Set<String> rawDestination = new HashSet<String>();
@@ -170,21 +173,20 @@ public class A2 extends JFrame implements ActionListener, ItemListener {
         destHosts.addAll(destination);
     }
 
-    /**
-     * @param ip
-     * @return
+    /** Takes a String IP address and returns a Long version of it that can be compared numerically.
+     * @param ip String IP address.
+     * @return l - the IP address as a Long value.
      */
     public Long toNumeric(String ip) {
-            Scanner sc = new Scanner(ip).useDelimiter("\\.");
-            Long l = (sc.nextLong() << 24) + (sc.nextLong() << 16) + (sc.nextLong() << 8)
-                    + (sc.nextLong());
+        Scanner sc = new Scanner(ip).useDelimiter("\\.");
+        Long l = (sc.nextLong() << 24) + (sc.nextLong() << 16) + (sc.nextLong() << 8)
+                + (sc.nextLong());
+        sc.close();
+        return l;
 
-            sc.close();
-            return l;
     }
 
-    /**
-     *
+    /** Updates the IP Address values in the JComboBox.
      */
     public void updateComboBox() {
         hostComboBox.removeItemListener(this);
@@ -204,10 +206,10 @@ public class A2 extends JFrame implements ActionListener, ItemListener {
 
     }
 
-
-    /**
-     * @param event
+    /** Action performed method that gets called when a radiobutton is activated.
+     * @param event ActionEvent object that gets passed when the event occurs.
      */
+    @Override
     public void actionPerformed(ActionEvent event) {
         if (radioButtonSource.isSelected()) {
             updateComboBox();
@@ -228,9 +230,10 @@ public class A2 extends JFrame implements ActionListener, ItemListener {
         }
     }
 
-    /**
-     * @param e
+    /** Item state event that gets called when JComboBox changes it selected IP Address.
+     * @param e ItemEvent object that gets passed when the JComboBox changed.
      */
+    @Override
     public void itemStateChanged(ItemEvent e) {
         if (hostComboBox.getSelectedItem() != null && e.getStateChange() == ItemEvent.SELECTED) {
             p.setIndex(hostComboBox.getSelectedIndex());

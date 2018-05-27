@@ -1,3 +1,8 @@
+/*Written by Ryan Martin-Gawn
+ *rmar818
+ * 584323162
+ */
+
 import javax.swing.SwingUtilities;
 
 public class RunA2 implements Runnable {
